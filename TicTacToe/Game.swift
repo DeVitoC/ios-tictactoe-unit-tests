@@ -9,14 +9,25 @@
 import Foundation
 
 struct Game {
+        
     private(set) var board: GameBoard
     
-    internal var activePlayer: GameBoard.Mark?
+    internal var activePlayer: GameBoard.Mark
     internal var gameIsOver: Bool
-    internal var winningPlayer: GameBoard.Mark
+    //internal var winningPlayer: GameBoard.Mark
     
-    mutating internal func restart() {
+    init() {
+        gameIsOver = false
+        board = GameBoard()
+        activePlayer = .x
         
+    }
+    
+    mutating func restart() -> GameBoard {
+        board = GameBoard()
+        activePlayer = .x
+        
+        return board
     }
     
     mutating internal func makeMark(at coordinate: Coordinate) throws {

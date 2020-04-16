@@ -16,9 +16,39 @@ class GameViewController: UIViewController, BoardViewControllerDelegate {
         case won(GameBoard.Mark) // Winning player
     }
     
+    private var boardViewController: BoardViewController! {
+        willSet {
+            boardViewController?.delegate = nil
+        }
+        didSet {
+            boardViewController?.board = board
+            boardViewController?.delegate = self
+        }
+    }
+    
+    @IBOutlet weak var statusLabel: UILabel!
+    
+    private var gameState = GameState.active(.x) {
+        didSet {
+            updateViews()
+        }
+    }
+    
+    private var board = GameBoard() {
+        didSet {
+            boardViewController.board = board
+        }
+    }
+    
+    private var newGame = Game()
+    
+    
+    
     @IBAction func restartGame(_ sender: Any) {
-        board = GameBoard()
-        gameState = .active(.x)
+//        board = GameBoard()
+        board = newGame.restart()
+        gameState = .active(newGame.activePlayer)
+        
     }
     
     // MARK: - BoardViewControllerDelegate
@@ -67,27 +97,5 @@ class GameViewController: UIViewController, BoardViewControllerDelegate {
         }
     }
     
-    private var boardViewController: BoardViewController! {
-        willSet {
-            boardViewController?.delegate = nil
-        }
-        didSet {
-            boardViewController?.board = board
-            boardViewController?.delegate = self
-        }
-    }
     
-    @IBOutlet weak var statusLabel: UILabel!
-    
-    private var gameState = GameState.active(.x) {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    private var board = GameBoard() {
-        didSet {
-            boardViewController.board = board
-        }
-    }
 }
